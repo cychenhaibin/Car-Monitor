@@ -1,0 +1,100 @@
+/*ui框架的css*/
+html,body {
+	height: 100%;
+	overflow: hidden;
+}
+body{
+	font-size:0.373333rem!important;
+}
+.mui-bar {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+#done.mui-disabled{
+	color: gray;
+}
+.mui-table-view{
+	margin-bottom:1.2rem;
+}
+.mui-indexed-list-bar{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding-bottom:1.2rem;
+}
+.mui-indexed-list-bar > a{
+	flex:1;
+	line-height: 0.32rem;
+}
+/*ui框架的css end*/
+.container{
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	padding-top:1.2rem;
+	background-color:#EF6330;
+}
+.header{
+	position: relative;
+	margin-top:1.2rem;
+}
+.mui-bar{
+	top:1.2rem;
+	background-color:#EF6330!important;
+}
+.mui-bar-nav{
+	box-shadow: none!important;
+}
+.mui-bar-nav.mui-bar .mui-icon,.mui-title{
+	color:#FFFFFF!important;
+}
+section{
+	flex:1;
+	background-color: #FFFFFF;
+}
+
+.vehicle-num{
+	display: flex;
+	float: right;
+	width: 65%;
+	margin-bottom: 0;
+	padding-left: 0;
+	border: 0;
+}
+.city{
+	padding: 11px 15px;
+	line-height: 1.1;
+	text-align: center;
+	color:#fff;
+	font-size: 0.426666rem;
+	background-color:#EF6330;
+}
+.search{
+	width: 100%;
+	padding: 0.4rem;
+}
+.search button{
+	width: 100%;
+	line-height: 0.64rem;
+	background-color: #EF6330!important;
+}
+.vehicle-wrap{
+	width: 100%;
+	height: 100%;
+	padding:0.4rem;
+	border-radius: 12px 12px 0px 0px;
+	background-color: #FFFFFF;
+}
+.vehicle-wrap ul{
+	display: flex;
+	flex-wrap: wrap;
+}
+.vehicle-wrap ul li{
+	margin:0.266666rem;
+	padding:0.266666rem 0.16rem;
+	color:#fff;
+	background-color: #999999;
+	border-radius: 0.16rem;
+	box-shadow: 1px 2px 2px #000;
+}

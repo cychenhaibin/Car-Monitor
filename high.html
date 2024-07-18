@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/common.css" rel="stylesheet" />
+		<link href="css/high.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="header">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					<h1 class="mui-title">违章高发地</h1>
+				</header>
+			</div>
+		</div>
+		<script src="js/mui.js"></script>
+		<script src="js/flexible.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				const ws = plus.webview.currentWebview();
+				const wsub = plus.webview.create('maps.html','maps',{
+					position:'absolute',
+					top:'100px',
+					left:'0px',
+					height:'100%'
+				})
+				ws.append(wsub);
+			})
+		</script>
+	</body>
+
+</html>

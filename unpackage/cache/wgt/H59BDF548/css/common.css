@@ -1,0 +1,23 @@
+*{margin:0;padding:0;}
+html,body{
+	background-color: #fff;
+}
+.tabber {
+	padding-bottom: .1rem;
+}
+ul{
+		list-style: none;
+}
+/* 底部默认样式修改 */
+.mui-bar{
+	background-color: #fff;
+}
+.mui-bar-tab .mui-tab-item.mui-active{
+	color:#EF6330!important;
+}
+.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label{
+	padding: 3px 0;
+	font-size:14px!important;
+	font-weight: bold;
+}
+/* 底部默认样式修改 end */

@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no, viewport-fit=cover" />
+		<link href="css/mui.min.css" rel="stylesheet"/>
+		<link rel="stylesheet" href="css/iconfont.css">
+		<link rel="stylesheet" href="css/common.css">
+		<link rel="stylesheet" href="css/home.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<header>
+				<div class="header">
+					<div class="city" id="goCity">
+						<span id="cityName">北京</span>
+						<i class="iconfont icon-arrow-down"></i>
+					</div>
+					<h3>违章查询</h3>
+					<div class="add-cart">
+						<i class="iconfont icon-hao"></i>
+					</div>
+				</div>
+				<div class="main-day">
+					<div class="weather">
+						<div id="temp">-5~3&#176;C</div>
+						<div id="weather">晴</div>
+						<div id="index">宜洗车</div>
+					</div>
+					<div class="limitation">
+						<div>今日限行</div>
+						<div id="dataLimit">
+							<span>4</span>
+							|
+							<span>9</span>
+						</div>
+						<div>
+							<span id="week">明日限行5/0</span>
+						</div>
+					</div>
+				</div>
+			</header>
+			<section>
+				<div class="main">
+					<div class="main-add-cart">
+						<i class="iconfont icon-jiahao-copy"></i>
+					</div>
+					<ul>
+						<li id="high">
+							<img src="img/wz.png" alt="" />
+							<span>违章高发地</span>
+						</li>
+						<li id="traffic">
+							<img src="img/lk.png" alt="" />
+							<span>实时路况</span>
+						</li>
+						<li>
+							<img src="img/xj.png" alt="" />
+							<span>新车询价</span>
+						</li>
+						<li id="station">
+							<img src="img/jy.png" alt="" />
+							<span>加油站</span>
+						</li>
+					</ul>
+				</div>
+			</section>
+		</div>
+		
+		<script src="js/mui.js"></script>
+		<script src="js/home.js"></script>
+		<script type="text/javascript">
+		
+			mui.init();
+			mui.plusReady(function(){
+				// 点击添加车辆
+				mui('.main').on('tap','.main-add-cart',function(){
+					// 检测登录
+					if(!localStorage.getItem('userInfo')){
+						mui.toast('请先登录');
+						return false;
+					}
+					// 跳转
+					mui.openWindow({
+						url:'addVehicle.html',
+						id:'addVehicle'
+					})
+				})
+				// 点击违章高发地跳转
+				mui('.main').on('tap','#high',function(){
+					mui.openWindow({
+						url:'high.html',
+						id:'high'
+					})
+				})
+				
+				// 点击加油站跳转
+				mui('.main').on('tap','#station',function(){
+					mui.openWindow({
+						url:'station.html',
+						id:'station'
+					})
+				})
+				
+				//点击实时路况跳转页面
+				mui('.main').on('tap','#traffic',function(){
+					mui.openWindow({
+						url:'traffic.html',
+						id:'traffic'
+					})
+				})
+				
+				
+				// let home = {};
+				// const maps = null;
+				// // 执行方法
+				// home.init = function(successCb){
+				// 	fGetCityLimit(successCb)
+				// }
+				
+				// // 监听当前位置
+				// plus.geolocation.watchPosition(function(data){
+				// 	// 获取当前所在位置的市
+				// 	maps = data.address.city.replace('市','');
+				// 	console.log(JSON.stringify(data));
+				// },function(){
+				// 	mui.toast('定位获取失败');
+				// },{
+				// 	provider:'system'
+				// });
+				
+				// // 当前定位的位置和数据拿到的所有位置做对比
+				// function fGetFilterCity(arr){
+				// 	for(let i in arr){
+				// 		if(arr[i].cityname == maps){
+				// 			return arr[i];
+				// 		}
+				// 	}
+				// 	return arr[0];
+				// }
+				
+				// // 请求限行城市数据
+				// function fGetCityLimit(successCb){
+				// 	mui.ajax('https://api.jisuapi.com/vehiclelimit/city', {
+				// 		dataType:'json',
+				// 		data:{
+				// 			appkey:'15b163096b822dbf'
+				// 		},
+				// 		success:function(data){
+				// 			const result = data.result;
+				// 			const targetCity = fGetFilterCity(result);
+				// 			successCb(targetCity);
+				// 		}
+				// 	})
+				// }
+				
+				
+				
+				
+				home.init(function(data){
+					// 执行赋值的操作
+					document.getElementById('cityName').innerHTML = data.cityname;
+					// 执行天气预报接口
+					fWeather(data.cityname);
+					// 执行限行接口
+					fGetCitylimit(data.cityname);
+				})
+				// 获取当前日期：格式年-月-日
+				function fGetDate(){
+					const date = new Date();
+					const swperator = '-';
+					const year = date.getFullYear();
+					const month = date.getMonth()+1;
+					const day = date.getDate();
+					if(month>=1 && month<=9){
+						month = "0" + month;
+					}
+					if(day>=1 && day<=9){
+						day = "0" + day;
+					}
+					const currentDate = year + swperator + month + swperator + day;
+					return currentDate;
+				}
+				// 请求限行接口
+				function fGetCitylimit(city){
+					mui.ajax('https://api.jisuapi.com/vehiclelimit/query',{
+						dataType:'json',
+						data:{
+							appkey:'15b163096b822dbf',
+							city:city,
+							date:fGetDate()
+						},
+						success:function(data){
+							const result = data.result;
+							const num = result.number.replace('和','|');
+							document.getElementById('week').innerHTML = result.week;
+							document.getElementById('dataLimit').innerHTML = num;
+						}
+					})
+				}
+				
+				// 请求天气预报接口
+				function fWeather(cityName){
+					mui.ajax('https://api.jisuapi.com/weather/query',{
+						dataType:'json',
+						data:{
+							appkey:'15b163096b822dbf',
+							city:cityName
+						},
+						success:function(data){
+							const result = data.result;
+							// 晴天还是雨天
+							document.getElementById('weather').innerHTML = result.weather;
+							// 当前温度
+							document.getElementById('temp').innerHTML = `${result.templow}~${result.temphigh}`;
+							// 洗车指数
+							document.getElementById('index').innerHTML = `${result.index[4].iname}:${result.index[4].ivalue}`;
+							
+						}
+					})
+				}
+				// 跳转到城市选择页
+				mui('.header').on('tap','#goCity',function(){
+					mui.openWindow({
+						url:'city-list.html',
+						id:'cityList'
+					})
+				})
+				// 接收城市选择页传过来的值
+				window.addEventListener('cityName',function(e){
+					const cityTitle = e.detail.cityTitle;
+					document.getElementById('cityName').innerHTML = cityTitle;
+					fWeather(cityTitle);
+					// 执行限行接口
+					fGetCitylimit(data.cityname);
+				});
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/common.css" rel="stylesheet" />
+		<style>
+			#mapsBox {
+				width: 100vw!important;
+				height: 100vh!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mapsBox"></div>
+		<script src="js/mui.js"></script>
+		<script src="js/flexible.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				// const mapsBox = document.getElementById('mapsBox');
+				// 地图不显示问题：需要给地图宽度和高度，不需要获取节点，直接用字符串，可能系统地图不行，需要百度地图或者高德地图的api
+				// 地图控件对象
+				const ptObj = new plus.maps.Map('mapsBox');
+				// 缩放
+				ptObj.setZoom(18);
+				// 显示当前用户的位置为中心
+				ptObj.isShowUserLocation(true);
+				// 获取用户当前位置的信息
+				ptObj.getUserLocation(function(state, point){
+					// console.log(JSON.stringify(state))
+					// console.log(JSON.stringify(point))
+					
+					// 创建Point对象
+					const center = new plus.maps.Point(point.longitude, point.latitude)
+								
+					// 设置地图的中心点
+					ptObj.setCenter(center);
+					
+					mui.ajax('https://api.jisuapi.com/illegaladdr/coord',{
+						dataType:'json',
+						data:{
+							appkey:'15b163096b822dbf',
+							lat:point.latitude,
+							lng:point.longitude,
+							range:3000,
+							num:20
+						},
+						success:function(data){
+							const result = data.result;
+							for(let i=0;i<result.length;i++){
+							
+								//创建地图标点Marker对象
+								const markObj = new plus.maps.Marker( new plus.maps.Point( result[i].lng, result[i].lat ) );
+								markObj.setIcon('img/wz.png');
+									
+								const bubObj = new plus.maps.Bubble( result[i].address );
+								markObj.setBubble(bubObj,true);
+								//添加操作
+								ptObj.addOverlay(markObj);
+							}
+						}
+					})
+					
+					// // 创建地图标点Marker对象
+					// const markObj = new plus.maps.Marker(center);
+					// markObj.setIcon('img/jy.png');
+					// const bubObj = new plus.maps.Bubble('加油站');
+					// markObj.setBubble(bubObj)
+					// // 添加操作
+					// ptObj.addOverlay(markObj)
+				});
+				
+			})
+		</script>
+	</body>
+
+</html>

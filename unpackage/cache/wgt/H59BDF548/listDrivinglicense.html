@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+	<link href="css/mui.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/listDrivinglicense.css">
+</head>
+<body>
+	
+<div class='container'>
+	<div class='header'>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">驾驶证查询</h1>
+		</header>
+	</div>
+	<section>
+		<div class='tips'>
+			清分日期为每年的领证日期，而不是1月1日哦～
+		</div>
+		<ul class="mui-table-view" id='listDrivinglicense'></ul>
+	</section>
+	<div class='add-details' id='addDetails'>
+		<i class='iconfont icon-jiahao-copy'></i>
+	</div>
+</div>
+	
+<script src="js/mui.js"></script>
+<script src='js/flexible.js'></script>
+<script type="text/javascript">
+mui.init();
+mui.plusReady(function(){
+	
+	//渲染数据
+	if(  localStorage.getItem('drivinglicense')  ){
+		var storageData = JSON.parse( localStorage.getItem('drivinglicense')  );
+		mui.each(storageData,function(index,item){
+			document.getElementById('listDrivinglicense').innerHTML += `
+				<li class="mui-table-view-cell" data-title='${item.serialNumber}' data-index='${index}'>
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<h3>${item.certificatesName}</h3>
+						<div class='detail'>
+							<div>档案编号<span> ${item.serialNumber} </span></div>
+							<div>累计扣分<span class='number'> ${item.score} </span></div>
+						</div>
+					</div>
+				</li>
+			`;
+		})
+	}
+	
+	//滑动删除操作
+	mui('.mui-table-view').on('tap', '.mui-btn', function(event) {
+		const elem = this;
+		const li = elem.parentNode.parentNode;
+		//获取到当前li的data-title
+		const liTitle = li.getAttribute('data-title');
+		mui.confirm('确认删除该条记录？', function(e) {
+			if (e.index == 0) {
+				li.parentNode.removeChild(li);
+				//获取到本地存储的数据
+				const list = JSON.parse( localStorage.getItem('drivinglicense') );
+				for(let i=0;i<list.length;i++){
+					if( list[i].serialNumber == liTitle ){
+						list.splice(i,1);
+						localStorage.setItem('drivinglicense',JSON.stringify(list));
+					}
+				}
+				//判断本地存储有没有数据，如果没有，直接清空本地存储的key
+				if( !list.length ){
+					localStorage.removeItem('drivinglicense');
+				}
+			}
+		});
+	});
+	
+	//点击每一条数据，可以进入详情页
+	mui('#listDrivinglicense').on('tap','li',function(){
+		//当前li的index，就是第几个li
+		const index = this.getAttribute('data-index');
+		const arr = JSON.parse( localStorage.getItem('drivinglicense') );
+		mui.openWindow({
+			url:'detailDrivinglicense.html',
+			id:'detailDrivinglicense',
+			extras:{
+				data:JSON.stringify(arr[index])
+			}
+		})
+	})
+	//点击右下角+号，进入添加页面
+	mui('.container').on('tap','#addDetails',function(){
+		mui.openWindow({
+			url:'addDrivinglicense.html',
+			id:'addDrivinglicense'
+		})
+	})
+	
+})
+</script>
+</body>
+
+</html>

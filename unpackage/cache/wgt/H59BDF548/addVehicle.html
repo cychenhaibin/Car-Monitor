@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+	<link href="css/mui.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/addVehicle.css">
+</head>
+<body>
+	
+<div class='container'>
+	<div class='header'>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">添加车辆</h1>
+		</header>
+	</div>
+	<section>
+		<form class="mui-input-group">
+			<div class="mui-input-row">
+				<label>车牌号</label>
+				<div class='vehicle-num'>
+					<a href='#vehicle' class='city' id='city'>京</a>
+					<input type="text" class="mui-input-clear" placeholder="请输入正确的车牌号" id='lsnumNum'>
+				</div>
+			</div>
+			<div class="mui-input-row">
+				<label>车架号</label>
+				<input type="text" class="mui-input-clear" placeholder="请输入正确的车架号" id='framenoNum'>
+			</div>
+			<div class="mui-input-row">
+				<label>发动机号</label>
+				<input type="text" class="mui-input-clear" placeholder="请输入正确的发动机号" id='enginenoNum'>
+			</div>
+		</form>
+		<div class='search'>
+			<button type="button" class="mui-btn mui-btn-warning" id='startSearch'>开始查询</button>
+			<p>
+				您所填写的信息仅仅用于车辆违章查询，我们将严格遵守《个人信息保密声明》，请放心填写。
+			</p>
+		</div>
+	</section>
+	
+	<div id='vehicle' class="vehicle-main mui-popover mui-popover-button mui-popover-action">
+		<div class='vehicle-wrap'>
+			<ul class='vehicle-list' id='vehicleList'></ul>
+		</div>
+	</div>
+	
+</div>
+	
+<script src="js/mui.js"></script>
+<script src='js/flexible.js'></script>
+<script type="text/javascript">
+mui.init();
+mui.plusReady(function(){
+	//获取车牌号前面的数据-->交管局
+	mui.ajax('https://api.jisuapi.com/illegal/carorg2',{
+		dataType:'json',
+		data:{
+			appkey:'15b163096b822dbf'
+		},
+		success:function(data){
+			const result = data.result.data;
+			mui.each(result,function(index,item){
+				document.querySelector('#vehicleList').innerHTML += `
+					<li>${item.lsprefix}</li>
+				`;
+			})
+		}
+	})
+	//点击车牌号前缀->赋值操作
+	mui('#vehicleList').on('tap','li',function(){
+		//赋值操作
+		document.getElementById('city').innerHTML = this.innerHTML;
+		//隐藏弹出层
+		mui('#vehicle').popover('hide');
+		
+	})
+	//点击开始查询
+	mui('.container').on('tap','#startSearch',function(){
+		//判断用户输入的内容，是否没空
+		const ipt = document.querySelectorAll('.mui-input-row input');
+		for(let i=0;i<ipt.length;i++){
+			if( !ipt[i].value ){
+				mui.toast(  ipt[i].getAttribute('placeholder')  );
+				return false;
+			}
+		}
+		
+		//如果填写了信息，发送请求
+		mui.ajax('https://api.jisuapi.com/illegal/query',{
+			dataType:'json',
+			data:{
+				appkey:'15b163096b822dbf',
+				lsprefix:document.getElementById('city').innerHTML,
+				lsnum:document.getElementById('lsnumNum').value,
+				frameno:document.getElementById('framenoNum').value,
+				engineno:document.getElementById('enginenoNum').value
+			},
+			success:function(data){
+				if( data.status == 217 ){
+					
+					const obj = {
+						lsprefix:document.getElementById('city').innerHTML,
+						lsnum:document.getElementById('lsnumNum').value,
+						frameno:document.getElementById('framenoNum').value,
+						engineno:document.getElementById('enginenoNum').value,
+						msg:data.msg
+					}
+					//保存到本地存储
+					if(  !localStorage.getItem('vehicle')  ){
+						localStorage.setItem('vehicle',`[${JSON.stringify(obj)}]`)
+					}else{
+						const localData = JSON.parse(localStorage.getItem('vehicle'));
+						localData.push(obj);
+						localStorage.setItem('vehicle',JSON.stringify(localData));
+					}
+					//提示信息
+					mui.toast('添加成功');
+					//跳转页面
+					mui.openWindow({
+						url:'listVehicle.html',
+						id:'listVehicle'
+					})
+				}else{
+					mui.toast(data.msg);
+				}
+				
+			}
+		})
+		
+	})
+	
+})
+</script>
+</body>
+
+</html>

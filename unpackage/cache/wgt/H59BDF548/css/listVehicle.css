@@ -1,0 +1,74 @@
+/*ui框架的css*/
+html,body {
+	height: 100%;
+	overflow: hidden;
+}
+body{
+	font-size:0.373333rem!important;
+}
+.mui-bar {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+#done.mui-disabled{
+	color: gray;
+}
+.mui-table-view{
+	margin-bottom:1.2rem;
+}
+.mui-indexed-list-bar{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding-bottom:1.2rem;
+}
+.mui-indexed-list-bar > a{
+	flex:1;
+	line-height: 0.32rem;
+}
+/*ui框架的css end*/
+.container{
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	padding-top:1.2rem;
+	background-color:#EF6330;
+}
+.header{
+	position: relative;
+	margin-top:1.2rem;
+}
+.mui-bar{
+	top:1.2rem;
+	background-color:#EF6330!important;
+}
+.mui-bar-nav{
+	box-shadow: none!important;
+}
+.mui-bar-nav.mui-bar .mui-icon,.mui-title{
+	color:#FFFFFF!important;
+}
+section{
+	flex:1;
+	background-color: #FFFFFF;
+}
+.add-details{
+	position: fixed;
+	bottom: 10%;
+	right: 10%;
+}
+.add-details i{
+	color:#EF6330;
+	font-size: 0.96rem!important;
+}
+.detail{
+	display: flex;
+	justify-content: space-between;
+	padding:0.16rem 0;
+}
+.number{
+	font-size: 0.426666rem;
+	font-weight: bold;
+	color:#FF0000;
+}

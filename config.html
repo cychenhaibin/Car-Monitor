@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/common.css" rel="stylesheet" />
+		<link href="css/config.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="header">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					<h1 class="mui-title">设置</h1>
+				</header>
+			</div>
+			<section>
+				<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">
+								用户服务协议
+							</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">
+								 隐私政策
+							</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">
+								 分享给朋友
+							</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">
+								 检查更新
+							</a>
+						</li>
+					</ul>
+					<button class="out" id="out">退出登录</button>
+					
+					
+			</section>
+		</div>
+		
+		<script src="js/mui.js"></script>
+		<script src="js/flexible.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				if(  !localStorage.getItem('userInfo')  ){
+					document.getElementById('out').style.display = 'none';
+					return false;
+				}
+				
+				let oauth = {};
+				let oauthList = null;
+				plus.oauth.getServices( function(data){
+					oauthList = data;
+				}, function(){
+					mui.toast('获取列表失败');
+				});
+					
+				//获取的列表和当前点击的做对比
+				oauth.fFilterOauth = function( id ){
+					for( let i in oauthList){
+						if( oauthList[i].id == id ){
+							return oauthList[i]
+						}
+					}
+					return null;
+				}
+				
+				//退出登录
+				mui('section').on('tap','#out',function(){
+					//获取到本地存储的信息
+					const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+					//调用对比操作 ===》 获取的列表和当前点击的做对比
+					const obj = oauth.fFilterOauth(userInfo.id);
+					obj.logout(function(){
+						//本地存储的数据清空
+						localStorage.removeItem('userInfo');
+						//定义事件
+						const my = plus.webview.getWebviewById('my.html');
+						mui.fire(my,'refresh');
+						//返回上一页
+						mui.back();
+						//提示信息
+						mui.toast('退出成功');
+					},function(){
+						mui.toast('退出登录失败,重新再试');
+					});
+				})
+			})
+		</script>
+	</body>
+
+</html>

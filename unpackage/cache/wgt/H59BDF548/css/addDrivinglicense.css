@@ -1,0 +1,82 @@
+/*ui框架的css*/
+html,body {
+	height: 100%;
+	overflow: hidden;
+}
+body{
+	font-size:0.373333rem!important;
+}
+.mui-bar {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+#done.mui-disabled{
+	color: gray;
+}
+.mui-table-view{
+	margin-bottom:1.2rem;
+}
+.mui-indexed-list-bar{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding-bottom:1.2rem;
+}
+.mui-indexed-list-bar > a{
+	flex:1;
+	line-height: 0.32rem;
+}
+/*ui框架的css end*/
+.container{
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	padding-top:1.2rem;
+	background-color:#EF6330;
+}
+.header{
+	position: relative;
+	margin-top:1.2rem;
+}
+.mui-bar{
+	top:1.2rem;
+	background-color:#EF6330!important;
+}
+.mui-bar-nav{
+	box-shadow: none!important;
+}
+.mui-bar-nav.mui-bar .mui-icon,.mui-title{
+	color:#FFFFFF!important;
+}
+section{
+	flex:1;
+	background-color: #FFFFFF;
+}
+.mui-input-group:after{
+	height: 0!important;
+}
+.mui-input-group .mui-input-row:last-child:after{
+	height: 0!important;
+}
+.mui-input-group .mui-input-row{
+	height: 48px!important;
+}
+.mui-input-row label{
+	padding: 0px 15px!important;
+	line-height: 48px!important;
+}
+.mui-input-row input{
+	height: 48px!important;
+	padding: 0px 15px!important;
+	line-height: 48px;
+}
+.search{
+	width: 100%;
+	padding: 0.4rem;
+}
+.search button{
+	width: 100%;
+	line-height: 0.64rem;
+	background-color: #EF6330!important;
+}
